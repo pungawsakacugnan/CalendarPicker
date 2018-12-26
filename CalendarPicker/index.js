@@ -95,7 +95,16 @@ export default class CalendarPicker extends Component {
     const containerWidth = width ? width : Dimensions.get('window').width;
     const containerHeight = height ? height : Dimensions.get('window').height;
     const initialScale = Math.min(containerWidth, containerHeight) / scaleFactor;
-    return {styles: makeStyles(initialScale, selectedDayColor, selectedDayTextColor, todayBackgroundColor)};
+    return {
+      styles: makeStyles(
+        initialScale,
+        selectedDayColor,
+        selectedDayTextColor,
+        todayBackgroundColor,
+        width,
+        height
+      )
+    };
   }
 
   updateMonthYear(initialDate = this.props.initialDate) {
@@ -235,6 +244,7 @@ export default class CalendarPicker extends Component {
       maxRangeDuration,
       swipeConfig,
       customDatesStyles,
+      headerStyles,
     } = this.props;
 
     let disabledDatesTime = [];
@@ -283,7 +293,7 @@ export default class CalendarPicker extends Component {
       >
         <View syles={styles.calendar}>
           <HeaderControls
-            styles={styles}
+            styles={{...styles, ...headerStyles}}
             currentMonth={currentMonth}
             currentYear={currentYear}
             initialDate={moment(initialDate)}

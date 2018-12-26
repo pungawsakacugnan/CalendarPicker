@@ -8,12 +8,13 @@ const DEFAULT_SELECTED_BACKGROUND_COLOR = '#5ce600';
 const DEFAULT_SELECTED_TEXT_COLOR = '#000000';
 const DEFAULT_TODAY_BACKGROUD_COLOR = '#CCCCCC';
 
-export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundColor) {
+export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundColor, width, height) {
   const SELECTED_BG_COLOR = backgroundColor ? backgroundColor : DEFAULT_SELECTED_BACKGROUND_COLOR;
   const SELECTED_TEXT_COLOR = textColor ? textColor : DEFAULT_SELECTED_TEXT_COLOR;
   const TODAY_BG_COLOR = todayBackgroundColor ? todayBackgroundColor : DEFAULT_TODAY_BACKGROUD_COLOR;
   return {
     calendar: {
+      borderWidth: 1,
       height: 320*scaler,
       marginTop: 10*scaler
     },
@@ -38,8 +39,6 @@ export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundCo
 
     dayLabelsWrapper: {
       flexDirection: 'row',
-      borderBottomWidth: 1,
-      borderTopWidth: 1,
       paddingTop: 10*scaler,
       paddingBottom: 10*scaler,
       alignSelf: 'center',
@@ -56,13 +55,13 @@ export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundCo
     dayLabels: {
       width: 50*scaler,
       fontSize: 12*scaler,
-      color: '#000',
+      color: '#B9B9B9',
       textAlign: 'center'
     },
 
     selectedDay: {
       width: 30*scaler,
-      height:30*scaler,
+      height: 30*scaler,
       borderRadius: 30*scaler,
       alignSelf: 'center',
       justifyContent: 'center'
@@ -74,7 +73,7 @@ export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundCo
 
     selectedToday: {
       width: 30*scaler,
-      height:30*scaler,
+      height: 30*scaler,
       backgroundColor: TODAY_BG_COLOR,
       borderRadius: 30*scaler,
       alignSelf: 'center',
@@ -126,8 +125,10 @@ export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundCo
     },
 
     headerWrapper: {
+      width: width - 40 *scaler,
       alignItems: 'center',
       flexDirection: 'row',
+      justifyContent: 'space-between',
       alignSelf: 'center',
       padding: 5*scaler,
       paddingBottom: 3*scaler,
