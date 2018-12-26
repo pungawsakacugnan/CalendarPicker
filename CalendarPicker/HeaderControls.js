@@ -29,33 +29,45 @@ export default function HeaderControls(props) {
   const month = MONTHS[currentMonth];
   const year = currentYear;
 
+  const renderPreviousComponent = (() => {
+    if (previousComponent) {
+      return previousComponent.call(null, props);
+    } else {
+      return (
+        <Controls
+          label={previous}
+          onPressControl={onPressPrevious}
+          styles={[styles.monthSelector, styles.prev]}
+          textStyles={textStyle}
+        />
+      );
+    }
+  })();
+
+  const renderNextComponent = (() => {
+    if (nextComponent) {
+      return nextComponent.call(null, props);
+    } else {
+      return (
+        <Controls
+          label={next}
+          onPressControl={onPressNext}
+          styles={[styles.monthSelector, styles.next]}
+          textStyles={textStyle}
+        />
+      );
+    }
+  })();
+
   return (
     <View style={styles.headerWrapper}>
-      {previousComponent ||
-        (
-          <Controls
-            label={previous}
-            onPressControl={onPressPrevious}
-            styles={[styles.monthSelector, styles.prev]}
-            textStyles={textStyle}
-          />
-        )
-      }
+      {renderPreviousComponent}
       <View>
         <Text style={[textStyle, styles.monthLabel]}>
            { month } { year }
         </Text>
       </View>
-      {nextComponent ||
-        (
-          <Controls
-            label={next}
-            onPressControl={onPressNext}
-            styles={[styles.monthSelector, styles.next]}
-            textStyles={textStyle}
-          />
-        )
-      }
+      {renderNextComponent}
     </View>
   );
 }
