@@ -36,7 +36,6 @@ export default function DaysGridView(props) {
     minRangeDuration,
     maxRangeDuration,
   } = props;
-  const today = moment();
   // let's get the total of days in this month, we need the year as well, since
   // leap years have different amount of days in February
   const totalDays = Utils.getDaysInMonth(month, year);

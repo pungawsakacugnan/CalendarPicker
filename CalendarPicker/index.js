@@ -88,7 +88,6 @@ export default class CalendarPicker extends Component {
     }
 
     if (doStateUpdate) {
-
       this.setState({...newStyles, ...newMonthYear, ...selectedDateRanges});
     }
   }
