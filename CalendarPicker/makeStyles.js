@@ -6,12 +6,12 @@
  */
 const DEFAULT_SELECTED_BACKGROUND_COLOR = '#5ce600';
 const DEFAULT_SELECTED_TEXT_COLOR = '#000000';
-const DEFAULT_TODAY_BACKGROUD_COLOR = '#CCCCCC';
+const DEFAULT_TODAY_BACKGROUND_COLOR = '#CCCCCC';
 
 export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundColor, width, height) {
   const SELECTED_BG_COLOR = backgroundColor ? backgroundColor : DEFAULT_SELECTED_BACKGROUND_COLOR;
   const SELECTED_TEXT_COLOR = textColor ? textColor : DEFAULT_SELECTED_TEXT_COLOR;
-  const TODAY_BG_COLOR = todayBackgroundColor ? todayBackgroundColor : DEFAULT_TODAY_BACKGROUD_COLOR;
+  const TODAY_BG_COLOR = todayBackgroundColor ? todayBackgroundColor : DEFAULT_TODAY_BACKGROUND_COLOR;
   return {
     calendar: {
       borderWidth: 1,
@@ -124,6 +124,66 @@ export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundCo
       textAlign: 'center'
     },
 
+    monthsWrapper: {
+      alignSelf: 'center',
+      justifyContent: 'center'
+    },
+
+    monthRow: {
+      flexDirection: 'row'
+    },
+
+    monthGridWrapper: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 70*scaler,
+      height: 70*scaler,
+      backgroundColor: 'rgba(0,0,0,0.0)'
+    },
+
+    monthGridLabel: {
+      fontSize: 15*scaler,
+      color: '#000',
+      alignSelf: 'center'
+    },
+
+    selectedMonth: {
+      backgroundColor: TODAY_BG_COLOR,
+      borderRadius: 70*scaler,
+      alignSelf: 'center',
+      justifyContent: 'center'
+    },
+
+    yearsWrapper: {
+      alignSelf: 'center',
+      justifyContent: 'center'
+    },
+
+    yearRow: {
+      flexDirection: 'row'
+    },
+
+    yearGridWrapper: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 70*scaler,
+      height: 70*scaler,
+      backgroundColor: 'rgba(0,0,0,0.0)'
+    },
+
+    yearGridLabel: {
+      fontSize: 15*scaler,
+      color: '#000',
+      alignSelf: 'center'
+    },
+
+    selectedYear: {
+      backgroundColor: TODAY_BG_COLOR,
+      borderRadius: 70*scaler,
+      alignSelf: 'center',
+      justifyContent: 'center'
+    },
+
     headerWrapper: {
       width: width - 40 *scaler,
       alignItems: 'center',
@@ -133,6 +193,11 @@ export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundCo
       padding: 5*scaler,
       paddingBottom: 3*scaler,
       backgroundColor: 'rgba(0,0,0,0.0)'
+    },
+
+    headerText: {
+      flex: 1,
+      alignItems : 'center'
     },
 
     monthSelector: {

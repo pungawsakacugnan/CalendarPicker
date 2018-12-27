@@ -5,7 +5,6 @@ import {
   TouchableOpacity
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { Utils } from './Utils';
 import moment from 'moment';
 
 export default function Day(props) {

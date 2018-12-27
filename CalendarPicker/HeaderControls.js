@@ -2,18 +2,27 @@ import React from 'react';
 import {
   View,
   Text,
+  TouchableOpacity
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { Utils } from './Utils';
+import {
+  Utils,
+  SELECT_MODE_MONTH,
+  SELECT_MODE_YEAR,
+  YEARS_MATRIX_COUNT,
+} from './Utils';
 import Controls from './Controls';
 
 export default function HeaderControls(props) {
   const {
     styles,
+    selectMode,
+    yearsOffset,
     currentMonth,
     currentYear,
     onPressNext,
     onPressPrevious,
+    onChangeSelectMode,
     nextComponent,
     previousComponent,
     months,
@@ -30,6 +39,9 @@ export default function HeaderControls(props) {
   const year = currentYear;
 
   const renderPreviousComponent = (() => {
+    if (selectMode === SELECT_MODE_MONTH) {
+      return;
+    }
     if (previousComponent) {
       return previousComponent.call(null, props);
     } else {
@@ -45,6 +57,9 @@ export default function HeaderControls(props) {
   })();
 
   const renderNextComponent = (() => {
+    if (selectMode === SELECT_MODE_MONTH) {
+      return;
+    }
     if (nextComponent) {
       return nextComponent.call(null, props);
     } else {
@@ -59,24 +74,47 @@ export default function HeaderControls(props) {
     }
   })();
 
+  const headerText = (() => {
+    switch (selectMode) {
+      case SELECT_MODE_YEAR:
+        let yearMin = year;
+        if (yearsOffset !== 0) {
+          yearMin = year + (YEARS_MATRIX_COUNT * yearsOffset);
+        }
+        const yearMax = yearMin + YEARS_MATRIX_COUNT - 1;
+        return `${yearMin} - ${yearMax}`;
+      case SELECT_MODE_MONTH:
+        return year;
+      default:
+        return `${month} ${year}`;
+    }
+  })();
+
   return (
     <View style={styles.headerWrapper}>
       {renderPreviousComponent}
-      <View>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.headerText}
+        onPress={onChangeSelectMode}
+      >
         <Text style={[textStyle, styles.monthLabel]}>
-           { month } { year }
+          { headerText }
         </Text>
-      </View>
+      </TouchableOpacity>
       {renderNextComponent}
     </View>
   );
 }
 
 HeaderControls.propTypes = {
+  selectMode: PropTypes.number,
+  yearsOffset: PropTypes.number,
   currentMonth: PropTypes.number,
   currentYear: PropTypes.number,
   onPressNext: PropTypes.func,
   onPressPrevious: PropTypes.func,
+  onChangeSelectMode: PropTypes.func,
   nextComponent: PropTypes.any,
   previousComponent: PropTypes.any,
 };

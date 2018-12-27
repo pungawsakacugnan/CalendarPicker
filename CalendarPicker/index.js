@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
   Dimensions,
-  StyleSheet,
 } from 'react-native';
 import { makeStyles } from './makeStyles';
-import { Utils } from './Utils';
+import {
+  Utils,
+  SELECT_MODE_DEFAULT,
+  SELECT_MODE_MONTH,
+  SELECT_MODE_YEAR,
+  YEARS_MATRIX_COUNT
+} from './Utils';
 import HeaderControls from './HeaderControls';
 import Weekdays from './Weekdays';
 import DaysGridView from './DaysGridView';
+import MonthsGridView from './MonthsGridView';
+import YearsGridView from './YearsGridView';
 import Swiper from './Swiper';
 import moment from 'moment';
 
@@ -25,10 +31,12 @@ export default class CalendarPicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectMode: SELECT_MODE_DEFAULT,
       currentMonth: null,
       currentYear: null,
       selectedStartDate: props.selectedStartDate || null,
-      selectedEndDate: props.selectedEndDate ||null,
+      selectedEndDate: props.selectedEndDate || null,
+      yearsOffset: 0,
       styles: {},
       ...this.updateScaledStyles(props),
       ...this.updateMonthYear(props.initialDate)
@@ -38,6 +46,9 @@ export default class CalendarPicker extends Component {
     this.handleOnPressPrevious = this.handleOnPressPrevious.bind(this);
     this.handleOnPressNext = this.handleOnPressNext.bind(this);
     this.handleOnPressDay = this.handleOnPressDay.bind(this);
+    this.handleOnPressMonth = this.handleOnPressMonth.bind(this);
+    this.handleOnPressYear = this.handleOnPressYear.bind(this);
+    this.handleOnChangeSelectMode = this.handleOnChangeSelectMode.bind(this);
     this.onSwipe = this.onSwipe.bind(this);
   }
 
@@ -148,7 +159,40 @@ export default class CalendarPicker extends Component {
     }
   }
 
+  handleOnPressMonth(month) {
+    const { selectedStartDate } = this.state;
+    const { onDateChange } = this.props;
+    this.setState({
+      selectMode: SELECT_MODE_DEFAULT, // reset
+      currentMonth: month,
+      selectedStartDate,
+      selectedEndDate: null,
+    });
+    // propagate to parent date has changed
+    onDateChange(selectedStartDate, Utils.START_DATE);
+  }
+
+  handleOnPressYear(year) {
+    const { selectedStartDate } = this.state;
+    const { onDateChange } = this.props;
+    this.setState({
+      selectMode: SELECT_MODE_MONTH, // go back to month view
+      currentYear: year,
+      selectedStartDate,
+      selectedEndDate: null,
+    });
+    // propagate to parent date has changed
+    onDateChange(selectedStartDate, Utils.START_DATE);
+  }
+
   handleOnPressPrevious() {
+    const { selectMode } = this.state;
+    if (selectMode === SELECT_MODE_YEAR) {
+      this.setState((state) => ({
+        yearsOffset: state.yearsOffset - 1
+      }));
+      return;
+    }
     let { currentMonth, currentYear } = this.state;
     let previousMonth = currentMonth - 1;
     // if previousMonth is negative it means the current month is January,
@@ -170,6 +214,13 @@ export default class CalendarPicker extends Component {
   }
 
   handleOnPressNext() {
+    const { selectMode } = this.state;
+    if (selectMode === SELECT_MODE_YEAR) {
+      this.setState((state) => ({
+        yearsOffset: state.yearsOffset + 1
+      }));
+      return;
+    }
     let { currentMonth, currentYear } = this.state;
     let nextMonth = currentMonth + 1;
     // if nextMonth is greater than 11 it means the current month is December,
@@ -188,6 +239,24 @@ export default class CalendarPicker extends Component {
       });
     }
     this.props.onMonthChange && this.props.onMonthChange(moment({year: currentYear, month: nextMonth}));
+  }
+
+  handleOnChangeSelectMode() {
+    const { selectMode } = this.state;
+    let newMode;
+    switch (selectMode) {
+      case SELECT_MODE_DEFAULT:
+        newMode = SELECT_MODE_MONTH;
+        break;
+      case SELECT_MODE_MONTH:
+        newMode = SELECT_MODE_YEAR;
+        break;
+      case SELECT_MODE_YEAR:
+        return;
+    }
+    this.setState({
+      selectMode: newMode
+    });
   }
 
   onSwipe(gestureName) {
@@ -214,6 +283,8 @@ export default class CalendarPicker extends Component {
 
   render() {
     const {
+      selectMode,
+      yearsOffset,
       currentMonth,
       currentYear,
       selectedStartDate,
@@ -294,9 +365,12 @@ export default class CalendarPicker extends Component {
         <View syles={styles.calendar}>
           <HeaderControls
             styles={{...styles, ...headerStyles}}
+            selectMode={selectMode}
+            yearsOffset={yearsOffset}
             currentMonth={currentMonth}
             currentYear={currentYear}
             initialDate={moment(initialDate)}
+            onChangeSelectMode={this.handleOnChangeSelectMode}
             onPressPrevious={this.handleOnPressPrevious}
             onPressNext={this.handleOnPressNext}
             months={months}
@@ -306,34 +380,58 @@ export default class CalendarPicker extends Component {
             nextComponent={nextComponent}
             textStyle={textStyle}
           />
-          <Weekdays
-            styles={styles}
-            startFromMonday={startFromMonday}
-            weekdays={weekdays}
-            textStyle={textStyle}
-          />
-          <DaysGridView
-            month={currentMonth}
-            year={currentYear}
-            styles={styles}
-            onPressDay={this.handleOnPressDay}
-            disabledDates={disabledDatesTime}
-            minRangeDuration={minRangeDurationTime}
-            maxRangeDuration={maxRangeDurationTime}
-            startFromMonday={startFromMonday}
-            allowRangeSelection={allowRangeSelection}
-            selectedStartDate={selectedStartDate && moment(selectedStartDate)}
-            selectedEndDate={selectedEndDate && moment(selectedEndDate)}
-            minDate={minDate && moment(minDate)}
-            maxDate={maxDate && moment(maxDate)}
-            textStyle={textStyle}
-            todayTextStyle={todayTextStyle}
-            selectedDayStyle={selectedDayStyle}
-            selectedRangeStartStyle={selectedRangeStartStyle}
-            selectedRangeStyle={selectedRangeStyle}
-            selectedRangeEndStyle={selectedRangeEndStyle}
-            customDatesStyles={customDatesStyles}
-          />
+          {selectMode === SELECT_MODE_DEFAULT && (
+            <View>
+              <Weekdays
+                styles={styles}
+                startFromMonday={startFromMonday}
+                weekdays={weekdays}
+                textStyle={textStyle}
+              />
+              <DaysGridView
+                month={currentMonth}
+                year={currentYear}
+                styles={styles}
+                onPressDay={this.handleOnPressDay}
+                disabledDates={disabledDatesTime}
+                minRangeDuration={minRangeDurationTime}
+                maxRangeDuration={maxRangeDurationTime}
+                startFromMonday={startFromMonday}
+                allowRangeSelection={allowRangeSelection}
+                selectedStartDate={selectedStartDate && moment(selectedStartDate)}
+                selectedEndDate={selectedEndDate && moment(selectedEndDate)}
+                minDate={minDate && moment(minDate)}
+                maxDate={maxDate && moment(maxDate)}
+                textStyle={textStyle}
+                todayTextStyle={todayTextStyle}
+                selectedDayStyle={selectedDayStyle}
+                selectedRangeStartStyle={selectedRangeStartStyle}
+                selectedRangeStyle={selectedRangeStyle}
+                selectedRangeEndStyle={selectedRangeEndStyle}
+                customDatesStyles={customDatesStyles}
+              />
+            </View>
+          )}
+          {selectMode === SELECT_MODE_MONTH && (
+            <MonthsGridView
+              month={currentMonth}
+              year={currentYear}
+              styles={styles}
+              textStyle={textStyle}
+              onPressMonth={this.handleOnPressMonth}
+            />
+          )}
+          {selectMode === SELECT_MODE_YEAR && (
+            <YearsGridView
+              year={currentYear}
+              yearsOffset={yearsOffset}
+              styles={styles}
+              textStyle={textStyle}
+              minDate={minDate && moment(minDate)}
+              maxDate={maxDate && moment(maxDate)}
+              onPressYear={this.handleOnPressYear}
+            />
+          )}
         </View>
       </Swiper>
     );

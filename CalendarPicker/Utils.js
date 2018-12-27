@@ -21,3 +21,9 @@ export const Utils = {
     return lastDayOfMonth.getDate();
   },
 };
+
+export const SELECT_MODE_DEFAULT = 1;
+export const SELECT_MODE_MONTH = 2;
+export const SELECT_MODE_YEAR = 3;
+
+export const YEARS_MATRIX_COUNT = 16;
