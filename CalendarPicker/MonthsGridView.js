@@ -21,19 +21,20 @@ export default function MonthsGridView(props) {
     const column = guideColumnArray.map(index => {
       const monthIndex = (guideColumnArray.length * i) + index;
       const baseMonth = moment([1970, monthIndex, ]);
-      let wrapperStyles = [styles.monthGridWrapper];
-      if (month === monthIndex) {
-        wrapperStyles = [...wrapperStyles, styles.selectedMonth];
-      }
+      const wrapperStyles = month === monthIndex
+        ? styles.selectedMonth
+        : {};
       return (
-        <View key={monthIndex} style={wrapperStyles}>
+        <View key={monthIndex} style={styles.monthGridWrapper}>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => onPressMonth(monthIndex)}
           >
-            <Text style={[textStyle, styles.monthGridLabel]}>
-              { baseMonth.format('MMM') }
-            </Text>
+            <View style={wrapperStyles}>
+              <Text style={[textStyle, styles.monthGridLabel]}>
+                { baseMonth.format('MMM') }
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
       );

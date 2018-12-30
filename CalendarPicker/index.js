@@ -175,6 +175,7 @@ export default class CalendarPicker extends Component {
     const { selectedStartDate } = this.state;
     const { onDateChange } = this.props;
     this.setState({
+      yearsOffset: 0, // reset offset
       selectMode: SELECT_MODE_MONTH, // go back to month view
       currentYear: year,
       selectedStartDate,
@@ -242,7 +243,6 @@ export default class CalendarPicker extends Component {
 
   handleOnChangeSelectMode() {
     const { selectMode } = this.state;
-    const { onDateChange } = this.props;
     let newMode;
     switch (selectMode) {
       case SELECT_MODE_DEFAULT:
@@ -255,12 +255,8 @@ export default class CalendarPicker extends Component {
         return;
     }
     this.setState({
-      selectMode: newMode,
-      selectedStartDate: null,
-      selectedEndDate: null
+      selectMode: newMode
     });
-    // propagate to parent date has changed
-    onDateChange(null, Utils.START_DATE);
   }
 
   onSwipe(gestureName) {

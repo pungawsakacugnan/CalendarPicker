@@ -149,7 +149,9 @@ export function makeStyles(scaler, backgroundColor, textColor, todayBackgroundCo
 
     selectedMonth: {
       backgroundColor: TODAY_BG_COLOR,
-      borderRadius: 70*scaler,
+      borderRadius: 65,
+      width: 65,
+      height: 65,
       alignSelf: 'center',
       justifyContent: 'center'
     },
