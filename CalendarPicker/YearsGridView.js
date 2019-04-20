@@ -1,11 +1,12 @@
 import React from 'react';
 import {
   View,
-  Text,
-  TouchableOpacity,
+  Text
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { YEARS_MATRIX_COUNT } from './Utils';
+
+import TouchableFeedback from './components/TouchableFeedback';
 
 export default function YearsGridView(props) {
   const {
@@ -29,16 +30,16 @@ export default function YearsGridView(props) {
         wrapperStyles = [...wrapperStyles, styles.selectedYear];
       }
       return (
-        <View key={yearIndex} style={wrapperStyles}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => onPressYear(yearIndex)}
-          >
-            <Text style={[textStyle, styles.yearGridLabel]}>
-              { yearIndex }
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableFeedback
+          activeOpacity={0.8}
+          onPress={() => onPressYear(yearIndex)}
+        >
+          <View key={yearIndex} style={wrapperStyles}>
+              <Text style={[textStyle, styles.yearGridLabel]}>
+                { yearIndex }
+              </Text>
+          </View>
+        </TouchableFeedback>
       );
     });
     return column;
