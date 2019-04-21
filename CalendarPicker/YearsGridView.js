@@ -31,10 +31,11 @@ export default function YearsGridView(props) {
       }
       return (
         <TouchableFeedback
+          key={yearIndex}
           activeOpacity={0.8}
           onPress={() => onPressYear(yearIndex)}
         >
-          <View key={yearIndex} style={wrapperStyles}>
+          <View style={wrapperStyles}>
               <Text style={[textStyle, styles.yearGridLabel]}>
                 { yearIndex }
               </Text>

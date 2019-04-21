@@ -175,7 +175,6 @@ export default class CalendarPicker extends Component {
     const { selectedStartDate } = this.state;
     const { onDateChange } = this.props;
     this.setState({
-      yearsOffset: 0, // reset offset
       selectMode: SELECT_MODE_MONTH, // go back to month view
       currentYear: year,
       selectedStartDate,
@@ -279,6 +278,22 @@ export default class CalendarPicker extends Component {
       selectedStartDate: null,
       selectedEndDate: null,
     });
+  }
+
+  setToday() {
+    const { onDateChange } = this.props;
+    const date = moment();
+    this.setState({
+      selectMode: SELECT_MODE_DEFAULT,
+      initialDate: date,
+      currentMonth: parseInt(date.month()),
+      currentYear: parseInt(date.year()),
+      selectedStartDate: date,
+      selectedEndDate: null,
+      yearsOffset: 0
+    });
+    // propagate to parent date has changed
+    onDateChange(date, Utils.START_DATE);
   }
 
   render() {
